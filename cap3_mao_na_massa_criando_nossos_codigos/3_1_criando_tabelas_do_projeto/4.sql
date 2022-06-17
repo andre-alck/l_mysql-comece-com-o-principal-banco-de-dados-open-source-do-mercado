@@ -40,10 +40,10 @@ CREATE TABLE comprodu (
 CREATE TABLE comvenda (
     n_numevenda INT NOT NULL AUTO_INCREMENT,
     c_codivenda VARCHAR(10),
-    n_numeclien int not null,
-    n_numeforne int not null,
-    n_numevende int not null,
-    n_numeprodu int not null,
+    n_numeclien int NOT NULL,
+    n_numeforne int NOT NULL,
+    n_numevende int NOT NULL,
+    n_numeprodu int NOT NULL,
     n_valovenda float(10, 2),
     n_descvenda float(10, 2),
     n_totavenda float(10, 2),
@@ -54,9 +54,9 @@ CREATE TABLE comvenda (
 CREATE TABLE comvendas (
     n_numevenda INT NOT NULL AUTO_INCREMENT,
     c_codivenda VARCHAR(10),
-    n_numeclien int not null,
-    n_numeforne int not null,
-    n_numevende int not null,
+    n_numeclien int NOT NULL,
+    n_numeforne int NOT NULL,
+    n_numevende int NOT NULL,
     n_valovenda float(10, 2),
     n_descvenda float(10, 2),
     n_totavenda float(10, 2),
@@ -68,8 +68,8 @@ CREATE TABLE comivenda (
     n_numeivenda INT NOT NULL AUTO_INCREMENT,
     n_numevenda INT NOT NULL,
     n_numeprodu INT NOT NULL,
-    n_valoivenda FLOAT(10 , 2 ),
+    n_valoivenda FLOAT(10, 2),
     n_qtdeivenda INT,
-    n_descivenda FLOAT(10 , 2 ),
+    n_descivenda FLOAT(10, 2),
     PRIMARY KEY (n_numeivenda)
 );
