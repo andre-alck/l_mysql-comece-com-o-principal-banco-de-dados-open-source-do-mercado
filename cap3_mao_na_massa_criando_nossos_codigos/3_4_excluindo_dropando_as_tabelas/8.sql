@@ -1,1 +1,1 @@
-DROP table comvendas;
+DROP TABLE comvendas;
