@@ -10,7 +10,7 @@ ADD
 
 -- c_estclien está fora do padrão, considerando que só possui 3 (est). Portanto, é necessário deletar a coluna e refazê-la
 ALTER TABLE
-    comclien DROP COLUMN c_estaclien;
+    comclien DROP COLUMN c_estclien;
 
 ALTER TABLE
     comclien
