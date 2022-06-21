@@ -5,6 +5,9 @@ WHERE
 
 COMMIT;
 
--- DELETE FROM comclien;
--- commit;
--- TRUNCATE TABLE comclien;
+DELETE FROM
+    comclien;
+
+COMMIT;
+
+TRUNCATE TABLE comclien;
