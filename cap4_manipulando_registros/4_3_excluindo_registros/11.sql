@@ -10,4 +10,4 @@ DELETE FROM
 
 COMMIT;
 
-TRUNCATE TABLE comclien;
+-- TRUNCATE TABLE comclien;

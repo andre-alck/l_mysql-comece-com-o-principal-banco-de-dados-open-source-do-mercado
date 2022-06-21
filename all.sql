@@ -45,7 +45,6 @@ CREATE TABLE comvenda (
     n_numeclien int NOT NULL,
     n_numeforne int NOT NULL,
     n_numevende int NOT NULL,
-    n_numeprodu int NOT NULL,
     n_valovenda float(10, 2),
     n_descvenda float(10, 2),
     n_totavenda float(10, 2),
@@ -93,7 +92,7 @@ ADD
     CONSTRAINT fk_comvenda_comclien FOREIGN KEY(n_numeclien) REFERENCES comclien(n_numeclien) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE
-    comvenda
+    comivenda
 ADD
     CONSTRAINT fk_comivenda_comprodu FOREIGN KEY(n_numeprodu) REFERENCES comprodu(n_numeprodu) ON DELETE NO ACTION ON UPDATE NO ACTION;
 

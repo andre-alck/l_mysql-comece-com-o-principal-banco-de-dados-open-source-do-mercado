@@ -44,7 +44,6 @@ CREATE TABLE comvenda (
     n_numeclien int NOT NULL,
     n_numeforne int NOT NULL,
     n_numevende int NOT NULL,
-    n_numeprodu int NOT NULL,
     n_valovenda float(10, 2),
     n_descvenda float(10, 2),
     n_totavenda float(10, 2),
