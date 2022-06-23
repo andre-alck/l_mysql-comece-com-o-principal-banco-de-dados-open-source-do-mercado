@@ -1,0 +1,1 @@
+SELECT n_numeclien FROM comvenda;
