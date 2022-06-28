@@ -1,0 +1,4 @@
+SELECT
+    TRUNCATE(213.14999999999, 1)
+FROM
+    dual;
