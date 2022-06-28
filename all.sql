@@ -1,3 +1,12 @@
+DROP DATABASE IF EXISTS comercial;
+
+-- 3.sql
+CREATE DATABASE comercial;
+
+SHOW DATABASES;
+
+USE comercial;
+
 -- 4.sql
 CREATE TABLE comclien (
     n_numeclien INT NOT NULL AUTO_INCREMENT,
@@ -987,3 +996,282 @@ INSERT INTO
     comivenda
 VALUES
     (41, 18, 5, '2325.32', 6, 0);
+
+-- 13.sql
+SELECT
+    *
+FROM
+    comclien;
+
+SELECT
+    n_numeclien,
+    c_codiclien,
+    c_razaclien
+FROM
+    comclien;
+
+SELECT
+    n_numeclien,
+    c_codiclien,
+    c_razaclien
+FROM
+    comclien
+WHERE
+    c_codiclien = '0001';
+
+SELECT
+    n_numeclien,
+    c_codiclien,
+    c_razaclien
+FROM
+    comclien
+WHERE
+    c_codiclien <> '0001';
+
+SELECT
+    n_numeclien,
+    c_codiclien,
+    c_razaclien
+FROM
+    comclien
+WHERE
+    c_nomeclien LIKE "L%";
+
+-- 14.sql
+SELECT
+    n_numeclien
+FROM
+    comvenda;
+
+-- 15.sql
+SELECT
+    c_codiclien,
+    c_razaclien
+FROM
+    comclien
+WHERE
+    n_numeclien IN (1, 2);
+
+SELECT
+    c_codiclien,
+    c_razaclien
+FROM
+    comclien
+WHERE
+    n_numeclien NOT IN (1, 2);
+
+-- 16.sql
+-- consulta para retornar a razão social dos clientes que possuem registro na tabela comvenda
+SELECT
+    c_razaclien
+FROM
+    comclien
+WHERE
+    n_numeclien IN (
+        SELECT
+            DISTINCT n_numeclien
+        FROM
+            comvenda
+    );
+
+-- consulta para buscar os clientes que ainda não fizeram nenhuma venda. a consulta principal vai consultar todos os registros que não possuem  n_numeclien na tabela comvenda.
+SELECT
+    c_razaclien
+FROM
+    comclien
+WHERE
+    n_numeclien NOT IN (
+        SELECT
+            DISTINCT n_numeclien
+        FROM
+            comvenda
+    );
+
+-- 17.sql
+-- consulta para retornar o código das vendas e a razão social dos respectivos clientes que as fizeram.
+SELECT
+    c_codivenda Cod_Venda,
+    (
+        SELECT
+            c_razaclien
+        FROM
+            comclien
+        WHERE
+            n_numeclien = comvenda.n_numeclien
+    ) Nome_Cliente
+FROM
+    comvenda;
+
+-- 18.sql
+SELECT
+    c_codiclien CODIGO,
+    c_nomeclien CLIENTE
+FROM
+    comclien
+WHERE
+    n_numeclien NOT IN (1, 2, 3, 4);
+
+-- 19.sql
+SELECT
+    c_codivenda Cod_Venda,
+    (
+        SELECT
+            c_razaclien
+        FROM
+            comclien
+        WHERE
+            n_numeclien = comvenda.n_numeclien
+    ) Nome_Cliente
+FROM
+    comvenda;
+
+-- 20.sql
+SELECT
+    c_codiclien,
+    c_razaclien,
+    c_codivenda Cod_venda
+FROM
+    comvenda,
+    comclien
+WHERE
+    comvenda.n_numeclien = comclien.n_numeclien
+ORDER BY
+    c_razaclien;
+
+-- 21.sql
+SELECT
+    c_codiclien codigo,
+    c_razaclien razao_social,
+    c_codivenda codi_venda
+FROM
+    comvenda
+    JOIN comclien ON comvenda.n_numeclien = comclien.n_numeclien
+ORDER BY
+    c_razaclien;
+
+-- 22.sql
+CREATE TABLE comclien_bkp AS(
+    SELECT
+        *
+    FROM
+        comclien
+    WHERE
+        c_estaclien = 'SP'
+);
+
+-- 23.sql
+CREATE TABLE comcontato (
+    n_numecontato int NOT NULL AUTO_INCREMENT,
+    c_nomecontato varchar(200),
+    c_fonecontato varchar(30),
+    c_cidacontato varchar(200),
+    c_estacontato varchar(2),
+    n_numeclien int,
+    PRIMARY KEY(n_numecontato)
+);
+
+INSERT INTO
+    comcontato(
+        SELECT
+            n_numeclien,
+            c_nomeclien,
+            c_foneclien,
+            c_cidaclien,
+            c_estaclien,
+            n_numeclien
+        FROM
+            comclien
+    );
+
+SELECT
+    *
+FROM
+    comcontato;
+
+-- 24.sql
+UPDATE
+    comcontato
+SET
+    c_cidacontato = 'LONDRINA',
+    c_estacontato = 'PR'
+WHERE
+    n_numeclien IN (
+        SELECT
+            n_numeclien
+        FROM
+            comclien_bkp
+    );
+
+-- 25.sql
+DELETE FROM
+    comcontato
+WHERE
+    n_numeclien NOT IN (
+        SELECT
+            n_numeclien
+        FROM
+            comvenda
+    );
+
+-- 26.sql
+SELECT
+    c_codiclien,
+    c_razaclien
+FROM
+    comvenda,
+    comclien
+WHERE
+    comvenda.n_numeclien = comclien.n_numeclien
+ORDER BY
+    c_razaclien;
+
+-- 27.sql
+SELECT
+    c_codiclien Cod_Cliente,
+    c_razaclien Razao_Cliente
+FROM
+    comclien,
+    comvenda
+WHERE
+    comvenda.n_numeclien = comclien.n_numeclien
+GROUP BY
+    c_codiclien,
+    c_razaclien
+ORDER BY
+    c_razaclien;
+
+-- 28.sql
+SELECT
+    c_codiclien Cod_Cliente,
+    c_razaclien Razao_Cliente,
+    count('este parâmetro não é relevante') Qtde
+FROM
+    comclien,
+    comvenda
+WHERE
+    comvenda.n_numeclien = comclien.n_numeclien
+GROUP BY
+    c_codiclien,
+    c_razaclien
+ORDER BY
+    c_razaclien;
+
+-- 29.sql
+SELECT
+    count(*)
+FROM
+    comclien;
+
+-- 30.sql
+SELECT
+    c_razaclien,
+    count('este parâmetro não é relevante') Qtde
+FROM
+    comclien,
+    comvenda
+WHERE
+    comvenda.n_numeclien = comclien.n_numeclien
+GROUP BY
+    c_razaclien
+HAVING
+    count(n_numevenda) > 2;
