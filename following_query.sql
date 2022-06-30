@@ -385,7 +385,9 @@ FROM
 GROUP BY
     c_codianima
 HAVING
-    count(*) >= 2 -- 31.sql
+    count(*) >= 2;
+
+-- 31.sql
 SELECT
     max(n_numeanima)
 FROM
@@ -400,7 +402,7 @@ FROM
 SELECT
     sum(n_numeanima)
 FROM
-    comvenda
+    tblanima
 WHERE
     d_dataanima BETWEEN '2015-03-17'
     AND '2015-05-17';
@@ -476,8 +478,117 @@ SET
 
 COMMIT;
 
-select c_codianima from tblanima;
+SELECT
+    c_codianima
+FROM
+    tblanima;
 
 -- 50.sql + 51.sql + 52.sql
+SELECT
+    d_dataanima d_dataanima,
+    curdate(),
+    datediff(curdate(), d_dataanima) datediff,
+    extract(
+        year
+        FROM
+            curdate()
+    ) this_year
+FROM
+    tblanima;
 
-select d_dataanima d_dataanima, curdate(), datediff(curdate(), d_dataanima) datediff, extract(year FROM curdate()) this_year from tblanima;
+-- 54.sql
+
+DROP PROCEDURE IF EXISTS ver_nome;
+
+delimiter $$
+
+CREATE PROCEDURE ver_nome(numero_animal smallint)
+BEGIN
+SELECT
+    concat('O nome do animal é: ', c_nomeanima) Resultado
+FROM
+    tblanima
+WHERE
+    n_numeanima = numero_animal;
+
+END $$
+
+delimiter ;
+
+call ver_nome(1);
+
+-- 55.sql
+
+DROP FUNCTION IF EXISTS ver_razao;
+
+delimiter $$
+
+CREATE FUNCTION ver_razao(numero_animal smallint) RETURNS VARCHAR(100) DETERMINISTIC
+
+BEGIN
+
+declare razao VARCHAR(100);
+
+SELECT
+    c_razaanima INTO razao
+FROM
+    tblanima
+WHERE
+    n_numeanima = numero_animal;
+
+RETURN razao;
+
+end $$
+
+delimiter ;
+
+select ver_razao(1);
+
+-- extra
+
+delimiter $$
+
+DROP PROCEDURE IF EXISTS ver_nome_razao;
+
+CREATE PROCEDURE ver_nome_razao(numero_animal smallint)
+BEGIN
+SELECT
+    concat(
+        'O nome do animal é: ',
+        ucase(c_nomeanima),
+        '. Sua razão social é: ',
+        ucase(ver_razao(numero_animal)),
+        '.'
+    ) razão
+FROM
+    tblanima
+WHERE
+    n_numeanima = numero_animal;
+
+END $$
+
+delimiter ;
+
+call ver_nome_razao(1);
+
+-- 59.sql
+
+SET
+    GLOBAL event_scheduler = ON;
+
+-- 60.sql
+
+DROP EVENT IF EXISTS check_nome_razao;
+
+delimiter $$
+
+CREATE event check_nome_razao
+ON schedule every 10 SECOND starts curtime()
+DO
+BEGIN
+    call ver_nome_razao(1);
+END $$
+
+delimiter ;
+
+alter event check_nome_razao disable;
