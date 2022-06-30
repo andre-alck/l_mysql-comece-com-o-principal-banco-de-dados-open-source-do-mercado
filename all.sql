@@ -1275,3 +1275,437 @@ GROUP BY
     c_razaclien
 HAVING
     count(n_numevenda) > 2;
+
+-- 31.sql
+SELECT
+    max(n_valovenda) maior_venda
+FROM
+    comvenda;
+
+SELECT
+    min(n_valovenda) menor_venda
+FROM
+    comvenda;
+
+SELECT
+    min(n_valovenda) menor_venda,
+    max(n_valovenda) maior_venda
+FROM
+    comvenda;
+
+-- 32.sql
+SELECT
+    sum(n_valovenda) valor_venda,
+    sum(n_descvenda) descontos,
+    sum(n_totavenda) total_venda
+FROM
+    comvenda
+WHERE
+    d_datavenda BETWEEN '2015-01-01'
+    AND '2015-01-31';
+
+-- ERRO: no livro, valor de total_venda diferente... voltar aqui, caso necessário
+-- 33.sql
+-- SELECT
+--     avg(n_numeclien)
+-- FROM
+--     comclien;
+SELECT
+    format(AVG(n_numeclien), 2)
+FROM
+    comclien;
+
+-- 34.sql
+SELECT
+    c_codiprodu,
+    c_descprodu
+FROM
+    comprodu
+WHERE
+    substr(c_codiprodu, 1, 3) = '123'
+    AND length(c_codiprodu) > 4;
+
+-- 35.sql
+SELECT
+    substr(c_razaclien, 1, 5) Razao__Cliente,
+    length(c_codiclien) Codigo_Cliente
+FROM
+    comclien;
+
+-- 36.sql
+SELECT
+    concat(c_razaforne, ' - fone: ', c_foneforne) Dados_Fornecedores
+FROM
+    comforne
+ORDER BY
+    c_razaforne;
+
+-- 37.sql
+SELECT
+    concat(c_codiclien, ' ', c_razaclien, ' ', c_nomeclien)
+FROM
+    comclien
+WHERE
+    c_razaclien LIKE 'GREA%';
+
+-- 38.sql
+SELECT
+    concat_ws(';', c_codiclien, c_razaclien, c_nomeclien)
+FROM
+    comclien
+WHERE
+    c_razaclien LIKE 'GREA%';
+
+-- 39.sql
+SELECT
+    lcase(c_razaclien)
+FROM
+    comclien;
+
+-- 40.sql
+SELECT
+    ucase('banco de dados mysql')
+FROM
+    dual;
+
+-- 41.sql
+SELECT
+    round(213.14999999999, 2)
+FROM
+    dual;
+
+-- 42.sql
+SELECT
+    format(213.14999999999, 2)
+FROM
+    dual;
+
+-- 43.sql
+SELECT
+    TRUNCATE(213.14999999999, 1)
+FROM
+    dual;
+
+-- 44.sql
+SELECT
+    sqrt(213.14999999999)
+FROM
+    dual;
+
+-- 45.sql
+SELECT
+    pi();
+
+SELECT
+    sin(pi());
+
+SELECT
+    cos(pi());
+
+SELECT
+    tan(pi());
+
+-- 46.sql
+SELECT
+    (n_qtdeivenda * n_valoivenda) multiplicação
+FROM
+    comivenda
+WHERE
+    n_numeivenda = 4;
+
+-- 47.sql
+SELECT
+    TRUNCATE(sum(n_valoivenda) / count(n_numeivenda), 2) divisão
+FROM
+    comivenda;
+
+-- 48.sql
+SELECT
+    n_descivenda + n_valoivenda adição
+FROM
+    comivenda
+WHERE
+    n_numeivenda = 4;
+
+-- 49.sql
+SELECT
+    n_valoivenda - n_descivenda subtração
+FROM
+    comivenda
+WHERE
+    n_numeivenda = 4;
+
+-- 50.sql
+SELECT
+    curdate();
+
+SELECT
+    NOW();
+
+SELECT
+    sysdate();
+
+SELECT
+    curtime();
+
+SELECT
+    datediff('2022-06-28 16:21:00', '2015-06-28 16:21:00');
+
+SELECT
+    date_add('2013-01-01', INTERVAL 31 DAY);
+
+SELECT
+    dayname('2022-06-28');
+
+SELECT
+    dayofmonth('2022-06-28');
+
+SELECT
+    extract(
+        year
+        FROM
+            '2022-06-28'
+    );
+
+SELECT
+    last_day('2022-06-28');
+
+-- 51.sql
+SELECT
+    date_format('2022-06-28', get_format(date, 'EUR')) manual,
+    date_format(curdate(), get_format(date, 'EUR')) automático;
+
+-- 52.sql
+SELECT
+    str_to_date('01.01.2015', get_format(date, 'USA'));
+
+-- 53.sql
+
+ALTER TABLE
+    comvende
+ADD
+    n_porcvende float(10, 2);
+    -- possível erro
+
+ALTER TABLE
+    comvenda
+ADD
+    n_vcomvenda float(10, 2);
+
+-- 54.sql
+
+USE `comercial`;
+
+DELIMITER $$
+
+CREATE PROCEDURE processa_comissionamento(
+    IN data_inicial date,
+    IN data_final date,
+    OUT total_processado int
+) BEGIN DECLARE total_venda float(10, 2) DEFAULT 0;
+
+DECLARE venda int DEFAULT 0;
+
+DECLARE vendedor int DEFAULT 0;
+
+DECLARE comissao float(10, 2) DEFAULT 0;
+
+DECLARE valor_comissao float(10, 2) DEFAULT 0;
+
+DECLARE aux int DEFAULT 0;
+
+DECLARE fimloop int DEFAULT 0;
+
+DECLARE busca_pedido CURSOR FOR
+SELECT
+    n_numevenda,
+    n_totavenda,
+    n_numevende
+FROM
+    comvenda
+WHERE
+    d_datavenda BETWEEN data_inicial
+    AND data_final
+    AND n_totavenda > 0;
+
+DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+SET
+    fimloop = 1;
+
+OPEN busca_pedido;
+
+vendas: LOOP IF fimloop = 1 THEN LEAVE vendas;
+
+END IF;
+
+FETCH busca_pedido INTO venda,
+total_venda,
+vendedor;
+
+SELECT
+    n_porcvende INTO comissao
+FROM
+    comvende
+WHERE
+    n_numevende = vendedor;
+
+IF (comissao > 0) THEN
+SET
+    valor_comissao = ((total_venda * comissao) / 100);
+
+UPDATE
+    comvenda
+SET
+    n_vcomvenda = valor_comissao
+WHERE
+    n_numevenda = venda;
+
+COMMIT;
+
+ELSEIF(comissao = 0) THEN
+UPDATE
+    comvenda
+SET
+    n_vcomvenda = 0
+WHERE
+    n_numevenda = venda;
+
+COMMIT;
+
+ELSE
+SET
+    comissao = 1;
+
+SET
+    valor_comissao = ((total_venda * comissao) / 100);
+
+UPDATE
+    comvenda
+SET
+    n_vcomvenda = valor_comissao
+WHERE
+    n_numevenda = venda;
+
+COMMIT;
+
+END IF;
+
+SET
+    comissao = 0;
+
+SET
+    aux = aux + 1;
+
+END LOOP vendas;
+
+SET
+    total_processado = aux;
+
+CLOSE busca_pedido;
+
+END $$
+
+DELIMITER ;
+
+call processa_comissionamento('2015-01-01', '2015-05-30', @a);
+
+SELECT
+    @a;
+
+-- 55.sql
+
+use comercial;
+
+delimiter $$;
+
+CREATE FUNCTION rt_nome_cliente(vn_numeclien int) RETURNS varchar(50) DETERMINISTIC
+
+BEGIN
+
+declare nome varchar(50);
+
+SELECT
+    c_nomeclien INTO nome
+FROM
+    comclien
+WHERE
+    n_numeclien = vn_numeclien;
+
+RETURN nome;
+
+END $$;
+
+delimiter ;
+
+-- 56.sql
+
+select rt_nome_cliente(1);
+
+-- 57.sql
+
+SELECT
+    c_codivenda,
+    rt_nome_cliente(n_numeclien),
+    d_datavenda
+FROM
+    comvenda
+ORDER BY
+    2,
+    3;
+
+-- 58.sql
+
+SELECT
+    'teste'
+FROM
+    dual;
+
+SELECT
+    rt_nome_cliente(10)
+FROM
+    dual;
+
+-- 59.sql
+
+SET
+    GLOBAL event_scheduler = ON;
+
+-- 60.sql
+
+delimiter $$
+
+CREATE event processa_comissao ON schedule every 1 week starts '2015-03-01 23:38:00' DO BEGIN call processa_comissionamento(
+    current_date() - INTERVAL 7 DAY,
+    current_date(),
+    @a
+);
+
+END
+
+$$
+
+delimiter ;
+
+ALTER event processa_comissao disable;
+
+-- 61.sql
+
+delimiter $$
+
+CREATE event processa_comissao_event
+ON schedule every 10 MINUTE
+starts NOW()
+ends NOW() + INTERVAL 30 MINUTE
+DO
+BEGIN
+    call processa_comissionamento(
+        current_date() - INTERVAL 7 DAY,
+        current_date(),
+        @a
+    );
+
+END $$
+
+delimiter ;
+
+ALTER event processa_comissao_event disable;

@@ -60,7 +60,7 @@ SET
 UPDATE
     comvenda
 SET
-    n_comvenda = valor_comissao
+    n_vcomvenda = valor_comissao
 WHERE
     n_numevenda = venda;
 
@@ -70,7 +70,7 @@ ELSEIF(comissao = 0) THEN
 UPDATE
     comvenda
 SET
-    n_comvenda = 0
+    n_vcomvenda = 0
 WHERE
     n_numevenda = venda;
 
@@ -86,7 +86,7 @@ SET
 UPDATE
     comvenda
 SET
-    n_comvenda = valor_comissao
+    n_vcomvenda = valor_comissao
 WHERE
     n_numevenda = venda;
 
@@ -107,7 +107,7 @@ SET
 
 CLOSE busca_pedido;
 
-END $ $
+END $$
 
 DELIMITER ;
 

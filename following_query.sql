@@ -377,3 +377,107 @@ ORDER BY
     c_razaanima;
 
 -- 30.sql
+SELECT
+    c_razaanima,
+    count(*)
+FROM
+    tblanima
+GROUP BY
+    c_codianima
+HAVING
+    count(*) >= 2 -- 31.sql
+SELECT
+    max(n_numeanima)
+FROM
+    tblanima;
+
+SELECT
+    min(n_numeanima)
+FROM
+    tblanima;
+
+-- 32.sql
+SELECT
+    sum(n_numeanima)
+FROM
+    comvenda
+WHERE
+    d_dataanima BETWEEN '2015-03-17'
+    AND '2015-05-17';
+
+-- 33.sql
+SELECT
+    format(avg(n_numeanima), 2)
+FROM
+    tblanima;
+
+-- 34.sql
+SELECT
+    c_razaanima
+FROM
+    tblanima
+WHERE
+    substr(c_razaanima, 1, 5);
+
+-- 35.sql
+SELECT
+    c_razaanima
+FROM
+    tblanima
+WHERE
+    length(c_razaanima) > 20;
+
+-- 36.sql
+SELECT
+    concat(
+        'A Razão Social do animal ',
+        c_nomeanima,
+        ' é: ',
+        c_razaanima
+    ) Nome
+FROM
+    tblanima;
+
+-- 37.sql
+SELECT
+    concat('Nome: ', c_nomeanima)
+FROM
+    tblanima
+WHERE
+    c_nomeanima LIKE '%D%';
+
+-- 38.sql + 39.sql + 40.sql
+SELECT
+    concat_ws(';', c_nomeanima, c_codianima, c_razaanima) Nome
+FROM
+    tblanima;
+
+SELECT
+    concat(
+        ucase('o nome deste animal é: '),
+        lcase(c_razaanima)
+    ) Nome
+FROM
+    tblanima
+WHERE
+    c_razaanima LIKE '%A%';
+
+-- 41.sql + 42.sql + 43.sql + 44.sql + 45.sql
+SELECT
+    format(round(TRUNCATE(sqrt(pi()), 5), 5), 5)
+FROM
+    dual;
+
+-- 46.sql + 47.sq + 48.sq + 49.sq 
+UPDATE
+    tblanima
+SET
+    c_codianima = ((((c_codianima + 1) - 1) * 1) / 1);
+
+COMMIT;
+
+select c_codianima from tblanima;
+
+-- 50.sql + 51.sql + 52.sql
+
+select d_dataanima d_dataanima, curdate(), datediff(curdate(), d_dataanima) datediff, extract(year FROM curdate()) this_year from tblanima;
