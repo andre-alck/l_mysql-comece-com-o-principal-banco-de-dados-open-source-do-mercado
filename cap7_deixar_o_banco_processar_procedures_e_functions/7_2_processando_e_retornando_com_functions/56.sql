@@ -1,0 +1,1 @@
+select rt_nome_cliente(1);
