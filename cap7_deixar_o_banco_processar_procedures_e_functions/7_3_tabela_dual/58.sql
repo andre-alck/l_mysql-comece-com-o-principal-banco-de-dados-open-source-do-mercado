@@ -1,2 +1,9 @@
-select 'teste' from dual;
-select rt_nome_cliente(10) from dual;
+SELECT
+    'teste'
+FROM
+    dual;
+
+SELECT
+    rt_nome_cliente(10)
+FROM
+    dual;
